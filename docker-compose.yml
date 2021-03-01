@@ -1,0 +1,24 @@
+version: "3.8"
+services:
+  db:
+    image: mongo
+    restart: always
+    container_name: mongodb
+    environment:
+      - PUID=1000
+      - PGID=1000
+    volumes:
+      # Writes to host database folder db instead of keeping it in the container
+      - db:/data/db
+      
+  fuzzer:
+    build:
+      context: .
+      args:
+        FUZZDIR: /jscfuzz        
+    restart: always
+    ports:
+      - "8080:8080"
+
+volumes:
+  db:
