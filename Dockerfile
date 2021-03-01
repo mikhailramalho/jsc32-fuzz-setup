@@ -1,8 +1,8 @@
-FROM debian:bullseye
+FROM debian:buster
 
 RUN apt-get -y update
 RUN apt-get install -y python3 python3-virtualenv wget git unzip npm zip
-RUN update-alternatives --install /usr/bin/python python /usr/bin/python3.9 1
+RUN update-alternatives --install /usr/bin/python python /usr/bin/python3.7 1
 
 COPY setup.sh /tmp/
 ARG FUZZDIR=/jscfuzz
