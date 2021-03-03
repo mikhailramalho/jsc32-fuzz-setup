@@ -27,7 +27,7 @@ git clone https://github.com/pmatos/jsc32-fuzz.git ${JSC32FUZZ}
 git clone https://github.com/renatahodovan/fuzzinator.git ${FUZZINATOR}
 
 # Clone webkit to destdir
-git clone --depth 1 https://github.com/WebKit/WebKit.git ${WEBKIT}
+git clone https://github.com/WebKit/WebKit.git ${WEBKIT}
 
 # All the software is now set in the correct place.
 echo "Software now in the correct folders:"
@@ -55,7 +55,7 @@ node build_db.js -i ${WEBTESTS} -o db chakra v8 spidermonkey WebKit/JSTests
 # Setup python environment
 echo "Setting up python environment"
 cd ${DESTDIR}
-virtualenv -p /usr/bin/python venv
+python -m virtualenv --python=python3.7 venv
 source venv/bin/activate
 
 pip install ${FUZZINATOR}
@@ -65,8 +65,8 @@ export PYTHONPATH=${JSC32FUZZ}/fuzzinator:${PYTHONPATH}
 cd ${DESTDIR}
 cat <<EOF > ./fuzzinator-common.ini
 [fuzzinator.custom]
-config_root=${DESTDIR}
-db_uri=mongodb://localhost/fuzzinator
+config_root=${JSC32FUZZ}
+db_uri=mongodb://db/fuzzinator
 db_server_selection_timeout=30000
 cost_budget=$(nproc)
 work_dir=${DESTDIR}/fuzzinator-tmp
