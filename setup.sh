@@ -5,6 +5,8 @@ set -e
 DESTDIR=$1
 mkdir -p ${DESTDIR}
 
+NCPUS=$2
+
 # Component dirs
 JSFUZZER=${DESTDIR}/js_fuzzer
 JSC32FUZZ=${DESTDIR}/jsc32-fuzz
@@ -68,7 +70,7 @@ cat <<EOF > ./fuzzinator-common.ini
 config_root=${JSC32FUZZ}
 db_uri=mongodb://db/fuzzinator
 db_server_selection_timeout=30000
-cost_budget=$(nproc)
+cost_budget=${NCPUS}
 work_dir=${DESTDIR}/fuzzinator-tmp
 EOF
 

@@ -1,4 +1,5 @@
 FROM debian:buster
+ARG NCPUS
 
 RUN apt-get -y update
 RUN apt-get install -y python3 python3-virtualenv wget git unzip zip curl software-properties-common cmake g++ gcc ruby libicu-dev
@@ -14,7 +15,7 @@ COPY setup.sh /tmp/
 ARG FUZZDIR=/jscfuzz
 ENV JSCFUZZ=${FUZZDIR}
 RUN mkdir ${FUZZDIR}
-RUN /tmp/setup.sh ${FUZZDIR}
+RUN /tmp/setup.sh ${FUZZDIR} ${NCPUS}
 
 EXPOSE 8080
 SHELL ["/bin/bash", "-c"]
