@@ -6,6 +6,7 @@ DESTDIR=$1
 mkdir -p ${DESTDIR}
 
 NCPUS=$2
+WEBKIT_GIT=$3
 
 # Component dirs
 JSFUZZER=${DESTDIR}/js_fuzzer
@@ -29,7 +30,8 @@ git clone https://github.com/pmatos/jsc32-fuzz.git ${JSC32FUZZ}
 git clone https://github.com/renatahodovan/fuzzinator.git ${FUZZINATOR}
 
 # Clone webkit to destdir
-git clone https://github.com/WebKit/WebKit.git ${WEBKIT}
+git clone ${WEBKIT_GIT} ${WEBKIT}
+git remote set-url origin https://github.com/WebKit/WebKit.git
 
 # All the software is now set in the correct place.
 echo "Software now in the correct folders:"

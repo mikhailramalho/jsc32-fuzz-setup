@@ -1,11 +1,11 @@
 FROM debian:buster
-ARG NCPUS
+ARG NCPUS=1
+ARG WEBKIT_GIT=https://github.com/WebKit/WebKit.git
 
 RUN apt-get -y update
-RUN apt-get install -y python3 python3-virtualenv wget git unzip zip curl software-properties-common cmake g++ gcc ruby libicu-dev
+RUN apt-get install -y python3 python3-dev python3-virtualenv libffi-dev wget git unzip zip curl software-properties-common cmake g++ gcc ruby libicu-dev rustc libssl-dev
 RUN update-alternatives --install /usr/bin/python python /usr/bin/python3.7 1
 RUN curl -sL https://deb.nodesource.com/setup_14.x | bash -
-RUN apt-get update
 RUN apt-get install -y nodejs
 RUN node -v
 RUN npm -v
@@ -15,7 +15,7 @@ COPY setup.sh /tmp/
 ARG FUZZDIR=/jscfuzz
 ENV JSCFUZZ=${FUZZDIR}
 RUN mkdir ${FUZZDIR}
-RUN /tmp/setup.sh ${FUZZDIR} ${NCPUS}
+RUN /tmp/setup.sh ${FUZZDIR} ${NCPUS} ${WEBKIT_GIT}
 
 EXPOSE 8080
 SHELL ["/bin/bash", "-c"]
