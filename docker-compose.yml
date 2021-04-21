@@ -17,7 +17,8 @@ services:
     build:
       context: .
       args:
-        FUZZDIR: /jscfuzz        
+        FUZZDIR: /jscfuzz
+        WEBKIT_GIT: /webkit
     restart: always
     ports:
       - "8080:8080"

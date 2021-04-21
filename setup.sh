@@ -20,6 +20,15 @@ WEBTESTS=${DESTDIR}/web_tests
 echo "Cloning components"
 echo
 
+# Clone webkit to destdir
+git clone ${WEBKIT_GIT} ${WEBKIT}
+pushd ${WEBKIT}
+git remote set-url origin https://github.com/WebKit/WebKit.git
+git fetch origin
+git checkout -b main origin/main
+git reset --hard origin/main
+popd
+
 # Copy js_fuzzer to destdir
 git clone https://github.com/pmatos/js_fuzzer.git ${JSFUZZER}
 
@@ -29,10 +38,6 @@ git clone https://github.com/pmatos/jsc32-fuzz.git ${JSC32FUZZ}
 # Copy fuzzinator to destdir
 git clone https://github.com/renatahodovan/fuzzinator.git ${FUZZINATOR}
 
-# Clone webkit to destdir
-git clone ${WEBKIT_GIT} ${WEBKIT}
-git remote set-url origin https://github.com/WebKit/WebKit.git
-
 # All the software is now set in the correct place.
 echo "Software now in the correct folders:"
 echo "js_fuzzer        : ${JSFUZZER}"
@@ -40,6 +45,8 @@ echo "jsc32-fuzz       : ${JSC32FUZZ}"
 echo "fuzzinator       : ${FUZZINATOR}"
 echo "WebKit           : ${WEBKIT}"
 echo
+
+cd ${DESTDIR}
 
 echo "Downloading Web Tests assets"
 mkdir ${WEBTESTS}
