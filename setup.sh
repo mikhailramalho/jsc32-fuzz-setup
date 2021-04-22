@@ -25,7 +25,7 @@ git clone ${WEBKIT_GIT} ${WEBKIT}
 pushd ${WEBKIT}
 git remote set-url origin https://github.com/WebKit/WebKit.git
 git fetch origin
-git checkout -b main origin/main
+git checkout -b main origin/main || true
 git reset --hard origin/main
 popd
 
