@@ -22,7 +22,7 @@ echo "Cloning components"
 echo
 
 # Clone webkit to destdir
-git clone ${WEBKIT_GIT} ${WEBKIT}
+git clone --depth=1 ${WEBKIT_GIT} ${WEBKIT}
 pushd ${WEBKIT}
 git remote set-url origin https://github.com/WebKit/WebKit.git
 git fetch origin
@@ -31,13 +31,13 @@ git reset --hard origin/main
 popd
 
 # Copy js_fuzzer to destdir
-git clone https://github.com/pmatos/js_fuzzer.git ${JSFUZZER}
+git clone --depth=1 https://github.com/pmatos/js_fuzzer.git ${JSFUZZER}
 
 # Copy jsc32-fuzz to destdir
-git clone https://github.com/pmatos/jsc32-fuzz.git ${JSC32FUZZ}
+git clone --depth=1 https://github.com/pmatos/jsc32-fuzz.git ${JSC32FUZZ}
 
 # Copy fuzzinator to destdir
-git clone https://github.com/renatahodovan/fuzzinator.git ${FUZZINATOR}
+git clone --depth=1 https://github.com/renatahodovan/fuzzinator.git ${FUZZINATOR}
 
 # All the software is now set in the correct place.
 echo "Software now in the correct folders:"
