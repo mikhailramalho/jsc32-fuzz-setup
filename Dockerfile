@@ -1,4 +1,5 @@
-FROM debian:buster
+ARG ARCH=amd64
+FROM docker.io/${ARCH}/debian:buster
 ARG FUZZDIR
 ARG NCPUS=1
 
@@ -16,7 +17,7 @@ COPY setup.sh /tmp/
 ARG FUZZDIR=/jscfuzz
 ENV JSCFUZZ=${FUZZDIR}
 RUN mkdir ${FUZZDIR}
-RUN /tmp/setup.sh ${FUZZDIR} ${NCPUS} /webkit.git
+RUN /tmp/setup.sh ${FUZZDIR} ${NCPUS} /webkit.git ${ARCH}
 
 EXPOSE 8080
 SHELL ["/bin/bash", "-c"]
