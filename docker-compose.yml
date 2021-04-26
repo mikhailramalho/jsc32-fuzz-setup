@@ -1,7 +1,7 @@
 version: "3.8"
 services:
   db:
-    image: mongo
+    image: mongo:3.6
     expose:
       - "27017"
     restart: always
