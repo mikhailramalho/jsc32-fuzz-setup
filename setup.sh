@@ -61,8 +61,6 @@ cd ${JSFUZZER}
 npm install
 mkdir db
 node build_db.js -i ${WEBTESTS} -o db chakra v8 spidermonkey WebKit/JSTests
-./node_modules/.bin/pkg -t node10-linux-x64 .
-./package.sh
 
 # Setup python environment
 echo "Setting up python environment"
