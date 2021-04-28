@@ -72,9 +72,10 @@ pip install ${FUZZINATOR}
 export PYTHONPATH=${JSC32FUZZ}/fuzzinator:${PYTHONPATH}
 
 # If we are building for arm32 we need the linux32 prefix
-ARCHPREFIX=
-if [ "${ARCH}" = "arm32v7" ]; then
+if [ "${ARCH}" == "arm32v7" ]; then
     ARCHPREFIX="linux32"
+else
+    ARCHPREFIX=
 fi
 
 # Setup fuzzinator common config file
