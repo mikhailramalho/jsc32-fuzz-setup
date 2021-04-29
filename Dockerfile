@@ -12,12 +12,27 @@ RUN node -v
 RUN npm -v
 RUN python --version
 
-COPY WebKit.git/ /webkit.git
-COPY setup.sh /tmp/
 ARG FUZZDIR=/jscfuzz
+
+COPY WebKit.git/ /webkit.git
+WORKDIR ${FUZZDIR}
+RUN git clone -q --depth=1 file:////webkit.git ./webkit
+
+WORKDIR ${FUZZDIR}/webkit
+RUN git remote set-url origin https://github.com/WebKit/WebKit.git
+RUN git fetch origin
+RUN git checkout -b main origin/main || true
+RUN git reset --hard origin/main
+
+WORKDIR ${FUZZDIR}
+RUN git clone -q --depth=1 https://github.com/pmatos/js_fuzzer.git ./js_fuzzer
+RUN git clone -q --depth=1 https://github.com/pmatos/jsc32-fuzz.git ./jsc32-fuzz
+RUN git clone -q --depth=1 https://github.com/renatahodovan/fuzzinator.git ./fuzzinator
+
+COPY setup.sh /tmp/
 ENV JSCFUZZ=${FUZZDIR}
 RUN mkdir ${FUZZDIR}
-RUN /tmp/setup.sh ${FUZZDIR} ${NCPUS} /webkit.git ${ARCH}
+RUN /tmp/setup.sh ${FUZZDIR} ${NCPUS} ${ARCH}
 
 EXPOSE 8080
 SHELL ["/bin/bash", "-c"]

@@ -6,8 +6,7 @@ DESTDIR=$1
 mkdir -p ${DESTDIR}
 
 NCPUS=$2
-WEBKIT_GIT=$3
-ARCH=$4
+ARCH=$3
 
 # Component dirs
 JSFUZZER=${DESTDIR}/js_fuzzer
@@ -17,27 +16,6 @@ WEBKIT=${DESTDIR}/webkit
 
 # Assets
 WEBTESTS=${DESTDIR}/web_tests
-
-echo "Cloning components"
-echo
-
-# Clone webkit to destdir
-git clone --depth=1 ${WEBKIT_GIT} ${WEBKIT}
-pushd ${WEBKIT}
-git remote set-url origin https://github.com/WebKit/WebKit.git
-git fetch origin
-git checkout -b main origin/main || true
-git reset --hard origin/main
-popd
-
-# Copy js_fuzzer to destdir
-git clone --depth=1 https://github.com/pmatos/js_fuzzer.git ${JSFUZZER}
-
-# Copy jsc32-fuzz to destdir
-git clone --depth=1 https://github.com/pmatos/jsc32-fuzz.git ${JSC32FUZZ}
-
-# Copy fuzzinator to destdir
-git clone --depth=1 https://github.com/renatahodovan/fuzzinator.git ${FUZZINATOR}
 
 # All the software is now set in the correct place.
 echo "Software now in the correct folders:"
@@ -72,7 +50,9 @@ pip install ${FUZZINATOR}
 export PYTHONPATH=${JSC32FUZZ}/fuzzinator:${PYTHONPATH}
 
 # If we are building for arm32 we need the linux32 prefix
+echo "ARCH is ${ARCH}"
 if [ "${ARCH}" == "arm32v7" ]; then
+    echo "We are on arm, so setting ARCHPREFIX to linux32"
     ARCHPREFIX="linux32"
 else
     ARCHPREFIX=
