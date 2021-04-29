@@ -31,7 +31,6 @@ RUN git clone -q --depth=1 https://github.com/renatahodovan/fuzzinator.git ./fuz
 
 COPY setup.sh /tmp/
 ENV JSCFUZZ=${FUZZDIR}
-RUN mkdir ${FUZZDIR}
 RUN /tmp/setup.sh ${FUZZDIR} ${NCPUS} ${ARCH}
 
 EXPOSE 8080
