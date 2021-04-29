@@ -3,8 +3,6 @@
 set -e
 
 DESTDIR=$1
-mkdir -p ${DESTDIR}
-
 NCPUS=$2
 ARCH=$3
 
