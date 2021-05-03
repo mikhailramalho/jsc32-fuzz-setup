@@ -3,17 +3,29 @@ FROM docker.io/${ARCH}/debian:buster
 ARG FUZZDIR
 ARG NCPUS=1
 
-RUN apt-get -y update
-RUN apt-get install -y python3 python3-dev python3-virtualenv libffi-dev wget git unzip zip curl software-properties-common cmake g++ gcc ruby libicu-dev rustc libssl-dev
+RUN apt-get update && apt-get install -y \
+    cmake \
+    curl \
+    g++ \
+    gcc \
+    git \
+    libffi-dev \
+    libicu-dev \
+    libssl-dev \
+    python3 \
+    python3-dev \
+    python3-virtualenv \
+    ruby \
+    rustc \
+    software-properties-common \
+    unzip \
+    wget \
+    zip \
+    && rm -rf /var/lib/apt/lists/*
 RUN update-alternatives --install /usr/bin/python python /usr/bin/python3.7 1
-RUN curl -sL https://deb.nodesource.com/setup_14.x | bash -
-RUN apt-get install -y nodejs
-RUN node -v
-RUN npm -v
-RUN python --version
+RUN curl -sL https://deb.nodesource.com/setup_14.x | bash - && apt-get install -y nodejs
 
 ARG FUZZDIR=/jscfuzz
-
 COPY WebKit.git/ /webkit.git
 WORKDIR ${FUZZDIR}
 RUN git clone -q --depth=1 file:////webkit.git ./webkit
