@@ -1,10 +1,15 @@
-#!/bin/bash
+#!/bin/bash -x
 
 set -e
 
 DESTDIR=$1
 NCPUS=$2
 ARCH=$3
+
+echo "Arguments:"
+echo "DESTDIR: ${DESTDIR}"
+echo "NCPUS: ${NCPUS}"
+echo "ARCH: ${ARCH}"
 
 # Component dirs
 JSFUZZER=${DESTDIR}/js_fuzzer
@@ -29,7 +34,7 @@ echo "Downloading Web Tests assets"
 mkdir ${WEBTESTS}
 wget -P ${WEBTESTS} https://github.com/pmatos/jsc32-fuzz/releases/download/webtests-20210211/web_tests.zip
 cd ${WEBTESTS}
-unzip web_tests.zip
+unzip -qq web_tests.zip
 rm web_tests.zip
 
 # Setup JS Fuzzer
