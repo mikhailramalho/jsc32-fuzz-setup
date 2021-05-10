@@ -1,6 +1,5 @@
 ARG ARCH=amd64
 FROM docker.io/${ARCH}/debian:buster
-ARG FUZZDIR
 ARG NCPUS=1
 
 RUN apt-get update && apt-get install -y \
@@ -43,6 +42,11 @@ RUN git clone -q --depth=1 https://github.com/renatahodovan/fuzzinator.git ./fuz
 
 COPY setup.sh /tmp/
 ENV JSCFUZZ=${FUZZDIR}
+
+RUN echo "fuzzdir: ${FUZZDIR}"
+RUN echo "ncpus: ${NCPUS}"
+RUN echo "arch: ${ARCH}"
+
 RUN /tmp/setup.sh ${FUZZDIR} ${NCPUS} ${ARCH}
 
 EXPOSE 8080
