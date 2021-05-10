@@ -53,9 +53,7 @@ pip install ${FUZZINATOR}
 export PYTHONPATH=${JSC32FUZZ}/fuzzinator:${PYTHONPATH}
 
 # If we are building for arm32 we need the linux32 prefix
-echo "ARCH is ${ARCH}"
 if [ "${ARCH}" == "arm32v7" ]; then
-    echo "We are on arm, so setting ARCHPREFIX to linux32"
     ARCHPREFIX="linux32"
 else
     ARCHPREFIX=
