@@ -2,6 +2,8 @@ ARG ARCH=amd64
 FROM docker.io/${ARCH}/debian:buster
 ARG ARCH
 ARG NCPUS=1
+ARG GITLAB_URL
+ARG GITLAB_TOKEN
 
 RUN apt-get update && apt-get install -y \
     cmake \
@@ -44,7 +46,7 @@ RUN git clone -q --depth=1 https://github.com/renatahodovan/fuzzinator.git ./fuz
 COPY setup.sh /tmp/
 ENV JSCFUZZ=${FUZZDIR}
 
-RUN /tmp/setup.sh ${FUZZDIR} ${NCPUS} ${ARCH}
+RUN /tmp/setup.sh ${FUZZDIR} ${NCPUS} ${ARCH} ${GITLAB_URL} ${GITLAB_TOKEN}
 
 EXPOSE 8080
 SHELL ["/bin/bash", "-c"]

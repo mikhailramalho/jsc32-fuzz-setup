@@ -5,11 +5,15 @@ set -e
 DESTDIR=$1
 NCPUS=$2
 ARCH=$3
+GITLAB_URL=$4
+GITLAB_TOKEN=$5
 
 echo "Arguments:"
 echo "DESTDIR: ${DESTDIR}"
 echo "NCPUS: ${NCPUS}"
 echo "ARCH: ${ARCH}"
+echo "GITLAB_URL: ${GITLAB_URL}"
+echo "GITLAB_TOKEN: ${GITLAB_TOKEN}"
 
 # Component dirs
 JSFUZZER=${DESTDIR}/js_fuzzer
@@ -68,6 +72,9 @@ db_uri=mongodb://db/fuzzinator
 db_server_selection_timeout=30000
 cost_budget=${NCPUS}
 work_dir=${DESTDIR}/fuzzinator-tmp
+gitlab_url=${GITLAB_URL}
+gitlab_project=jsc-fuzzing
+gitlab_token=${GITLAB_TOKEN}
 EOF
 
 cat <<EOF > ./jsc-common.ini
@@ -76,9 +83,6 @@ root_dir=${WEBKIT}
 reduce_jobs=1
 age=1:0:0:0
 timeout=1
-# Optional, only needed to send authenticated requests
-# to Bugzilla (find/report issues).
-api_key=
 arch_prefix=${ARCHPREFIX}
 
 [js-fuzzer.custom]
