@@ -10,6 +10,7 @@ RUN apt-get update && apt-get install -y \
     curl \
     g++ \
     gcc \
+    gdb \
     git \
     libffi-dev \
     libicu-dev \
