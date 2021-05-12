@@ -54,6 +54,7 @@ python -m virtualenv --python=python3.7 venv
 source venv/bin/activate
 
 pip install ${FUZZINATOR}
+pip install picireny
 export PYTHONPATH=${JSC32FUZZ}/fuzzinator:${PYTHONPATH}
 
 # If we are building for arm32 we need the linux32 prefix
