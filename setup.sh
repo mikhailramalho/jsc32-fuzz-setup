@@ -36,7 +36,7 @@ cd ${DESTDIR}
 
 echo "Downloading Web Tests assets"
 mkdir ${WEBTESTS}
-wget -P ${WEBTESTS} https://github.com/pmatos/jsc32-fuzz/releases/download/webtests-20210211/web_tests.zip
+wget -P ${WEBTESTS} https://github.com/pmatos/jsc32-fuzz/releases/download/webtests-20210517/web_tests.zip
 cd ${WEBTESTS}
 unzip -qq web_tests.zip
 rm web_tests.zip
