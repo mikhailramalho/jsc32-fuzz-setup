@@ -84,7 +84,7 @@ cat <<EOF > ./jsc-common.ini
 root_dir=${WEBKIT}
 reduce_jobs=1
 age=1:0:0:0
-timeout=1
+timeout=5
 arch_prefix=${ARCHPREFIX}
 
 [js-fuzzer.custom]
