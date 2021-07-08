@@ -44,9 +44,11 @@ RUN git clone -q --depth=1 https://github.com/pmatos/js_fuzzer.git ./js_fuzzer
 RUN git clone -q --depth=1 https://github.com/pmatos/jsc32-fuzz.git ./jsc32-fuzz
 RUN git clone -q --depth=1 https://github.com/renatahodovan/fuzzinator.git ./fuzzinator
 
+COPY build-gcc-9.sh /tmp/
 COPY setup.sh /tmp/
 ENV JSCFUZZ=${FUZZDIR}
 
+RUN /tmp/build-gcc-9.sh ${NCPUS} ${ARCH}
 RUN /tmp/setup.sh ${FUZZDIR} ${NCPUS} ${ARCH} ${GITLAB_URL} ${GITLAB_TOKEN}
 
 ENV PYTHONPATH=${FUZZDIR}/jsc32-fuzz/fuzzinator
