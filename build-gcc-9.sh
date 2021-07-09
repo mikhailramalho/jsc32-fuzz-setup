@@ -11,7 +11,11 @@ echo "ARCH: ${ARCH}"
 
 
 # Install dependencies
-apt-get install -y build-essential gcc-multilib g++-multilib libc6-dev wget libmpc-dev libgmp-dev libmpfr-dev 
+apt-get install -y build-essential libc6-dev wget libmpc-dev libgmp-dev libmpfr-dev 
+
+if [ "${ARCH}" != "arm32v7" ]; then
+    apt-get install -y gcc-multilib g++-multilib
+fi
 
 # Download source
 TMP=$(mktemp -d)
