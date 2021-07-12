@@ -30,6 +30,8 @@ cd ${TMP}/gcc-build
 if [ "${ARCH}" == "arm32v7" ]; then
     ../gcc-9.4.0/configure --prefix=/usr \
                            --enable-languages=c,c++,lto \
+                           --program-suffix=-9 \
+                           --program-prefix=arm-linux-gnueabihf- \
                            --with-arch=armv7-a \
                            --with-fpu=vfpv3-d16 \
                            --with-float=hard \
@@ -57,11 +59,6 @@ if [ "${ARCH}" == "arm32v7" ]; then
                            --enable-objc-gc=auto \
                            --enable-multiarch \
                            --disable-sjlj-exceptions \
-                           --with-arch=armv7-a \
-                           --with-fpu=vfpv3-d16 \
-                           --with-float=hard \
-                           --with-mode=thumb \
-                           --disable-werror \
                            --build=arm-linux-gnueabihf \
                            --host=arm-linux-gnueabihf \
                            --target=arm-linux-gnueabihf
