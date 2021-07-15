@@ -50,7 +50,8 @@ COPY setup.sh /tmp/
 ENV JSCFUZZ=${FUZZDIR}
 
 RUN /tmp/build-gcc-9.sh ${NCPUS} ${ARCH}
-ENV LD_LIBRARY_PATH=/usr/lib
+# /usr/lib for arm32 and /usr/lib64 for x86_64
+ENV LD_LIBRARY_PATH=/usr/lib:/usr/lib64
 
 RUN /tmp/setup.sh ${FUZZDIR} ${NCPUS} ${ARCH} ${GITLAB_URL} ${GITLAB_TOKEN}
 
