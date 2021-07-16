@@ -114,13 +114,16 @@ RUN make -j${NCPUS} && make -j${NCPUS} install
 RUN update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-9 50
 RUN update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-9 50
 
+# /usr/lib for arm32 and /usr/lib64 for x86_64
+ENV LD_LIBRARY_PATH=/usr/lib:/usr/lib64
 ############
+
+# Setup environment
+############
+
 WORKDIR /tmp
 COPY setup.sh .
 ENV JSCFUZZ=${FUZZDIR}
-
-# /usr/lib for arm32 and /usr/lib64 for x86_64
-ENV LD_LIBRARY_PATH=/usr/lib:/usr/lib64
 
 RUN /tmp/setup.sh ${FUZZDIR} ${NCPUS} ${ARCH} ${GITLAB_URL} ${GITLAB_TOKEN}
 
