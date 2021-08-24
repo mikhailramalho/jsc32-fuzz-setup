@@ -82,7 +82,7 @@ EOF
 cat <<EOF > ./jsc-common.ini
 [jsc]
 root_dir=${WEBKIT}
-reduce_jobs=1
+reduce_jobs=${NCPUS}
 age=0:12:0:0
 timeout=5
 arch_prefix=${ARCHPREFIX}
