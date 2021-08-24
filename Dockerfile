@@ -140,7 +140,7 @@ RUN pip install paramiko
 
 ENV JSC32FUZZ=${FUZZDIR}/jsc32-fuzz
 ENV PYTHONPATH=${JSC32FUZZ}/fuzzinator:${PYTHONPATH}
-COPY setup-files.sh
+COPY setup-files.sh .
 RUN ./setup-files.sh ${JSC32FUZZ} ${WEBKIT} ${FUZZDIR} ${ARCH} ${NCPUS} ${GITLAB_URL} ${GITLAB_TOKEN}
 
 ENV PYTHONPATH=${FUZZDIR}/jsc32-fuzz/fuzzinator
