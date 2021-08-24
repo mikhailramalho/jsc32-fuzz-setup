@@ -5,6 +5,8 @@ ARG NCPUS=1
 ARG GITLAB_URL
 ARG GITLAB_TOKEN
 
+SHELL ["/bin/bash", "-c"]
+
 RUN apt-get update && apt-get install -y \
     cmake \
     curl \
