@@ -120,14 +120,53 @@ ENV LD_LIBRARY_PATH=/usr/lib:/usr/lib64
 
 # Setup environment
 ############
+WORKDIR ${FUZZDIR}/web_tests
+RUN wget  https://github.com/pmatos/jsc32-fuzz/releases/download/webtests-20210824/web_tests.zip
+RUN unzip -qq web_tests.zip
+RUN rm web_tests.zip
 
-WORKDIR /tmp
-COPY setup.sh .
-ENV JSCFUZZ=${FUZZDIR}
+WORKDIR ${FUZZDIR}/js_fuzzer
+RUN npm install
+RUN mkdir db
+RUN node build_db.js -i ${WEBTESTS} -o db chakra v8 spidermonkey WebKit/JSTests
 
-RUN /tmp/setup.sh ${FUZZDIR} ${NCPUS} ${ARCH} ${GITLAB_URL} ${GITLAB_TOKEN}
+WORKDIR ${FUZZDIR}
+RUN python -m virtualenv --python=python3.7 venv
+RUN source venv/bin/activate
+RUN pip install ${FUZZINATOR}
+RUN pip install picireny
+RUN pip install paramiko
+
+ENV JSC32FUZZ=${FUZZDIR}/jsc32-fuzz
+ENV PYTHONPATH=${JSC32FUZZ}/fuzzinator:${PYTHONPATH}
+ENV ARCHPREFIX=$(if [[ "${ARCH}" == "arm32v7" ]]; then echo "linux32" else echo "")
+
+RUN cat <<EOF > ./fuzzinator-common.ini
+[fuzzinator.custom]
+config_root=${JSC32FUZZ}
+db_uri=mongodb://db/fuzzinator
+db_server_selection_timeout=30000
+cost_budget=${NCPUS}
+work_dir=${DESTDIR}/fuzzinator-tmp
+gitlab_url=${GITLAB_URL}
+gitlab_project=jsc-fuzzing
+gitlab_token=${GITLAB_TOKEN}
+EOF
+
+RUN cat <<EOF > ./jsc-common.ini
+[jsc]
+root_dir=${WEBKIT}
+reduce_jobs=${NCPUS}
+age=0:12:0:0
+timeout=5
+arch_prefix=${ARCHPREFIX}
+
+[js-fuzzer.custom]
+cwd=${JSFUZZER}
+webtests=${WEBTESTS}
+EOF
 
 ENV PYTHONPATH=${FUZZDIR}/jsc32-fuzz/fuzzinator
 EXPOSE 8080
 SHELL ["/bin/bash", "-c"]
-CMD source ${JSCFUZZ}/venv/bin/activate && fuzzinator --wui --bind-ip '0.0.0.0' --port 8080 ${JSCFUZZ}/fuzzinator-common.ini ${JSCFUZZ}/jsc-common.ini ${JSCFUZZ}/jsc32-fuzz/configs/fuzzinator.ini ${JSCFUZZ}/jsc32-fuzz/configs/jsc.ini ${JSCFUZZ}/jsc32-fuzz/configs/sut-jsc_local.ini
+CMD source ${FUZZDIR}/venv/bin/activate && fuzzinator --wui --bind-ip '0.0.0.0' --port 8080 ${FUZZDIR}/fuzzinator-common.ini ${FUZZDIR}/jsc-common.ini ${FUZZDIR}/jsc32-fuzz/configs/fuzzinator.ini ${FUZZDIR}/jsc32-fuzz/configs/jsc.ini ${FUZZDIR}/jsc32-fuzz/configs/sut-jsc_local.ini
