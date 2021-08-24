@@ -44,7 +44,7 @@ RUN git clone -q --depth=1 https://github.com/pmatos/js_fuzzer.git ./js_fuzzer
 RUN git clone -q --depth=1 https://github.com/pmatos/jsc32-fuzz.git ./jsc32-fuzz
 RUN git clone -q --depth=1 https://github.com/renatahodovan/fuzzinator.git ./fuzzinator
 
-# Build GCC 9
+# Build GCC 10
 #############
 RUN apt-get install -y \
     build-essential \
@@ -60,14 +60,14 @@ RUN if [ "${ARCH}" != "arm32v7" ]; then \
 RUN rm -rf /var/lib/apt/lists/*
 
 WORKDIR /tmp
-RUN wget https://mirrorservice.org/sites/sourceware.org/pub/gcc/releases/gcc-9.4.0/gcc-9.4.0.tar.gz
-RUN tar -xvzf gcc-9.4.0.tar.gz
+RUN wget https://mirrorservice.org/sites/sourceware.org/pub/gcc/releases/gcc-10.3.0/gcc-10.3.0.tar.gz
+RUN tar -xvzf gcc-10.3.0.tar.gz
 
 WORKDIR /tmp/gcc-build
 RUN if [ "${ARCH}" = "arm32v7" ]; then \
-        ../gcc-9.4.0/configure --prefix=/usr \
+        ../gcc-10.3.0/configure --prefix=/usr \
                                --enable-languages=c,c++,lto \
-                               --program-suffix=-9 \
+                               --program-suffix=-10 \
                                --with-arch=armv7-a \
                                --with-fpu=vfpv3-d16 \
                                --with-float=hard \
@@ -111,8 +111,8 @@ RUN if [ "${ARCH}" = "arm32v7" ]; then \
     fi
 RUN make -j${NCPUS} && make -j${NCPUS} install
 
-RUN update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-9 50
-RUN update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-9 50
+RUN update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-10 50
+RUN update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-10 50
 
 # /usr/lib for arm32 and /usr/lib64 for x86_64
 ENV LD_LIBRARY_PATH=/usr/lib:/usr/lib64
