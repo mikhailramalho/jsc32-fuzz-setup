@@ -33,7 +33,8 @@ COPY WebKit.git/ /webkit.git
 WORKDIR ${FUZZDIR}
 RUN git clone -q --depth=1 file:////webkit.git ./webkit
 
-WORKDIR ${FUZZDIR}/webkit
+ARG WEBKIT=${FUZZDIR}/webkit
+WORKDIR ${WEBKIT}
 RUN git remote set-url origin https://github.com/WebKit/WebKit.git
 RUN git fetch origin
 RUN git checkout -b main origin/main || true
@@ -139,32 +140,8 @@ RUN pip install paramiko
 
 ENV JSC32FUZZ=${FUZZDIR}/jsc32-fuzz
 ENV PYTHONPATH=${JSC32FUZZ}/fuzzinator:${PYTHONPATH}
-ENV ARCHPREFIX=$(if [[ "${ARCH}" == "arm32v7" ]]; then echo "linux32" else echo "")
-
-RUN cat <<EOF > ./fuzzinator-common.ini
-[fuzzinator.custom]
-config_root=${JSC32FUZZ}
-db_uri=mongodb://db/fuzzinator
-db_server_selection_timeout=30000
-cost_budget=${NCPUS}
-work_dir=${DESTDIR}/fuzzinator-tmp
-gitlab_url=${GITLAB_URL}
-gitlab_project=jsc-fuzzing
-gitlab_token=${GITLAB_TOKEN}
-EOF
-
-RUN cat <<EOF > ./jsc-common.ini
-[jsc]
-root_dir=${WEBKIT}
-reduce_jobs=${NCPUS}
-age=0:12:0:0
-timeout=5
-arch_prefix=${ARCHPREFIX}
-
-[js-fuzzer.custom]
-cwd=${JSFUZZER}
-webtests=${WEBTESTS}
-EOF
+COPY setup-files.sh
+RUN ./setup-files.sh ${JSC32FUZZ} ${WEBKIT} ${FUZZDIR} ${ARCH} ${NCPUS} ${GITLAB_URL} ${GITLAB_TOKEN}
 
 ENV PYTHONPATH=${FUZZDIR}/jsc32-fuzz/fuzzinator
 EXPOSE 8080
