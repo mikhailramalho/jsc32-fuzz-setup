@@ -100,11 +100,11 @@ RUN if [ "${ARCH}" = "arm32v7" ]; then \
                                --host=arm-linux-gnueabihf \
                                --target=arm-linux-gnueabihf; \
     else \
-        ../gcc-9.4.0/configure --prefix=/usr \
+        ../gcc-10.3.0/configure --prefix=/usr \
                                --enable-languages=c,c++,lto \
                                --disable-werror \
                                --enable-checking=yes \
-                               --program-suffix=-9 \
+                               --program-suffix=-10 \
                                --enable-bootstrap \
                                --disable-multilib \
                                --disable-docs \
