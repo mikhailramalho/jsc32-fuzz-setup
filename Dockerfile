@@ -130,7 +130,8 @@ ENV LD_LIBRARY_PATH=/usr/lib:/usr/lib64
 
 # Setup environment
 ############
-WORKDIR ${FUZZDIR}/web_tests
+ARG WEBTESTS=${FUZZDIR}/web_tests
+WORKDIR ${WEBTESTS}
 RUN wget  https://github.com/pmatos/jsc32-fuzz/releases/download/webtests-20210824/web_tests.zip
 RUN unzip -qq web_tests.zip
 RUN rm web_tests.zip
