@@ -4,8 +4,7 @@ ARG ARCH
 ARG NCPUS=1
 ARG GITLAB_URL
 ARG GITLAB_TOKEN
-
-SHELL ["/bin/bash", "-c"]
+ARG FUZZDIR # set by docker-compose.yml
 
 RUN apt-get update && apt-get install -y \
     cmake \
@@ -31,9 +30,6 @@ RUN apt-get update && apt-get install -y \
 RUN update-alternatives --install /usr/bin/python python /usr/bin/python3.7 1
 RUN curl -sL https://deb.nodesource.com/setup_14.x | bash - && apt-get install -y nodejs
 
-# FUZZDIR needs to be accessed during docker runtime, so ENV
-# needs to be used.
-ENV FUZZDIR=/jscfuzz
 COPY WebKit.git/ /webkit.git
 WORKDIR ${FUZZDIR}
 RUN git clone -q --depth=1 file:////webkit.git ./webkit
@@ -150,6 +146,9 @@ COPY setup-files.sh .
 RUN ./setup-files.sh ${JSC32FUZZ} ${WEBKIT} ${JSFUZZER} ${WEBTESTS} ${FUZZDIR} ${ARCH} ${NCPUS} ${GITLAB_URL} ${GITLAB_TOKEN}
 
 ENV PYTHONPATH=${FUZZDIR}/jsc32-fuzz/fuzzinator
+
+# FUZZDIR is an ARG, we need an alias as an ENV so its seen during runtime
+ENV ROOTDIR=${FUZZDIR}
 EXPOSE 8080
 SHELL ["/bin/bash", "-c"]
-CMD source ${FUZZDIR}/venv/bin/activate && fuzzinator --wui --bind-ip '0.0.0.0' --port 8080 ${FUZZDIR}/fuzzinator-common.ini ${FUZZDIR}/jsc-common.ini ${FUZZDIR}/jsc32-fuzz/configs/fuzzinator.ini ${FUZZDIR}/jsc32-fuzz/configs/jsc.ini ${FUZZDIR}/jsc32-fuzz/configs/sut-jsc_local.ini
+CMD source ${ROOTDIR}/venv/bin/activate && fuzzinator --wui --bind-ip '0.0.0.0' --port 8080 ${ROOTDIR}/fuzzinator-common.ini ${ROOTDIR}/jsc-common.ini ${ROOTDIR}/jsc32-fuzz/configs/fuzzinator.ini ${ROOTDIR}/jsc32-fuzz/configs/jsc.ini ${ROOTDIR}/jsc32-fuzz/configs/sut-jsc_local.ini
