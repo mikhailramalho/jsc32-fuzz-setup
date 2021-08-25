@@ -6,6 +6,8 @@ ARG GITLAB_URL
 ARG GITLAB_TOKEN
 ARG FUZZDIR # set by docker-compose.yml
 
+SHELL ["/bin/bash", "-c"]
+
 RUN apt-get update && apt-get install -y \
     cmake \
     curl \
@@ -150,5 +152,4 @@ ENV PYTHONPATH=${FUZZDIR}/jsc32-fuzz/fuzzinator
 # FUZZDIR is an ARG, we need an alias as an ENV so its seen during runtime
 ENV ROOTDIR=${FUZZDIR}
 EXPOSE 8080
-SHELL ["/bin/bash", "-c"]
 CMD source ${ROOTDIR}/venv/bin/activate && fuzzinator --wui --bind-ip '0.0.0.0' --port 8080 ${ROOTDIR}/fuzzinator-common.ini ${ROOTDIR}/jsc-common.ini ${ROOTDIR}/jsc32-fuzz/configs/fuzzinator.ini ${ROOTDIR}/jsc32-fuzz/configs/jsc.ini ${ROOTDIR}/jsc32-fuzz/configs/sut-jsc_local.ini
