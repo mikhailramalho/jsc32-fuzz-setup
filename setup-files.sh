@@ -4,11 +4,13 @@ set -e
 
 JSC32FUZZ=$1
 WEBKIT=$2
-FUZZDIR=$3
-ARCH=$4
-NCPUS=$5
-GITLAB_URL=$6
-GITLAB_TOKEN=$7
+JSFUZZER=$3
+WEBTESTS=$4
+FUZZDIR=$5
+ARCH=$6
+NCPUS=$7
+GITLAB_URL=$8
+GITLAB_TOKEN=$9
 
 # If we are building for arm32 we need the linux32 prefix
 if [ "${ARCH}" == "arm32v7" ]; then
@@ -18,20 +20,19 @@ else
 fi
 
 # Setup fuzzinator common config file
-cd ${DESTDIR}
-cat <<EOF > ./fuzzinator-common.ini
+cat <<EOF > ${FUZZDIR}/fuzzinator-common.ini
 [fuzzinator.custom]
 config_root=${JSC32FUZZ}
 db_uri=mongodb://db/fuzzinator
 db_server_selection_timeout=30000
 cost_budget=${NCPUS}
-work_dir=${DESTDIR}/fuzzinator-tmp
+work_dir=${FUZZDIR}/fuzzinator-tmp
 gitlab_url=${GITLAB_URL}
 gitlab_project=jsc-fuzzing
 gitlab_token=${GITLAB_TOKEN}
 EOF
 
-cat <<EOF > ./jsc-common.ini
+cat <<EOF > ${FUZZDIR}/jsc-common.ini
 [jsc]
 root_dir=${WEBKIT}
 reduce_jobs=${NCPUS}
