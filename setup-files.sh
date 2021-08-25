@@ -1,16 +1,6 @@
 #!/bin/bash
 
-set -e
-
-JSC32FUZZ=$1
-WEBKIT=$2
-JSFUZZER=$3
-WEBTESTS=$4
-FUZZDIR=$5
-ARCH=$6
-NCPUS=$7
-GITLAB_URL=$8
-GITLAB_TOKEN=$9
+set -euxo pipefail
 
 # If we are building for arm32 we need the linux32 prefix
 if [ "${ARCH}" == "arm32v7" ]; then

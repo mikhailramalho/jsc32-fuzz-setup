@@ -8,6 +8,12 @@ ARG FUZZDIR # set by docker-compose.yml
 
 SHELL ["/bin/bash", "-c"]
 
+# Check arguments
+RUN [ -z "$GITLAB_URL" ] && echo "GITLAB_URL is required" && exit 1 || true
+RUN [ -z "$GITLAB_TOKEN" ] && echo "GITLAB_TOKEN is required" && exit 1 || true
+RUN [ -z "$FUZZDIR" ] && echo "FUZZDIR is required" && exit 1 || true
+
+# Install dependencies
 RUN apt-get update && apt-get install -y \
     cmake \
     curl \
@@ -145,7 +151,7 @@ RUN source venv/bin/activate && \
 
 ENV PYTHONPATH=${JSC32FUZZ}/fuzzinator:${PYTHONPATH}
 COPY setup-files.sh .
-RUN ./setup-files.sh ${JSC32FUZZ} ${WEBKIT} ${JSFUZZER} ${WEBTESTS} ${FUZZDIR} ${ARCH} ${NCPUS} ${GITLAB_URL} ${GITLAB_TOKEN}
+RUN ./setup-files.sh
 
 ENV PYTHONPATH=${FUZZDIR}/jsc32-fuzz/fuzzinator
 
