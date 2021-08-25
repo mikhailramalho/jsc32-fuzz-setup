@@ -136,7 +136,8 @@ RUN wget  https://github.com/pmatos/jsc32-fuzz/releases/download/webtests-202108
 RUN unzip -qq web_tests.zip
 RUN rm web_tests.zip
 
-WORKDIR ${FUZZDIR}/js_fuzzer
+ARG JSFUZZER=${FUZZDIR}/js_fuzzer
+WORKDIR ${JSFUZZER}
 RUN npm install
 RUN mkdir db
 RUN node build_db.js -i ${WEBTESTS} -o db chakra v8 spidermonkey WebKit/JSTests
