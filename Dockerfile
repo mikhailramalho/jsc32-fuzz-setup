@@ -31,7 +31,9 @@ RUN apt-get update && apt-get install -y \
 RUN update-alternatives --install /usr/bin/python python /usr/bin/python3.7 1
 RUN curl -sL https://deb.nodesource.com/setup_14.x | bash - && apt-get install -y nodejs
 
-ARG FUZZDIR=/jscfuzz
+# FUZZDIR needs to be accessed during docker runtime, so ENV
+# needs to be used.
+ENV FUZZDIR=/jscfuzz
 COPY WebKit.git/ /webkit.git
 WORKDIR ${FUZZDIR}
 RUN git clone -q --depth=1 file:////webkit.git ./webkit
