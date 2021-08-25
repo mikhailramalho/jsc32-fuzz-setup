@@ -19,6 +19,19 @@ else
     ARCHPREFIX=
 fi
 
+echo "Finalizing setup:"
+echo "  * ARCH: ${ARCH}"
+echo "  * ARCHPREFIX: ${ARCHPREFIX}"
+echo "  * FUZZDIR: ${FUZZDIR}"
+echo "  * JSC32FUZZ: ${JSC32FUZZ}"
+echo "  * WEBTESTS: ${WEBTESTS}"
+echo "  * WEBKIT: ${WEBKIT}"
+echo "  * JSFUZZER: ${JSFUZZER}"
+echo "  * NCPUS: ${NCPUS}"
+echo "  * GITLAB_URL: ${GITLAB_URL}"
+echo "  * GITLAB_TOKEN: ${GITLAB_TOKEN}"
+echo
+
 # Setup fuzzinator common config file
 cat <<EOF > ${FUZZDIR}/fuzzinator-common.ini
 [fuzzinator.custom]
