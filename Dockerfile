@@ -134,14 +134,15 @@ RUN npm install
 RUN mkdir db
 RUN node build_db.js -i ${WEBTESTS} -o db chakra v8 spidermonkey WebKit/JSTests
 
+ENV JSC32FUZZ=${FUZZDIR}/jsc32-fuzz
+ARG FUZZINATOR=${FUZZDIR}/fuzzinator
 WORKDIR ${FUZZDIR}
 RUN python -m virtualenv --python=python3.7 venv
 RUN source venv/bin/activate && \
       pip install ${FUZZINATOR} && \
       pip install picireny && \
-      pip install paramiko && \
+      pip install paramiko
 
-ENV JSC32FUZZ=${FUZZDIR}/jsc32-fuzz
 ENV PYTHONPATH=${JSC32FUZZ}/fuzzinator:${PYTHONPATH}
 COPY setup-files.sh .
 RUN ./setup-files.sh ${JSC32FUZZ} ${WEBKIT} ${FUZZDIR} ${ARCH} ${NCPUS} ${GITLAB_URL} ${GITLAB_TOKEN}
