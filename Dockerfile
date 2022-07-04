@@ -38,91 +38,16 @@ RUN apt-get update && apt-get install -y \
 RUN update-alternatives --install /usr/bin/python python /usr/bin/python3.7 1
 RUN curl -sL https://deb.nodesource.com/setup_14.x | bash - && apt-get install -y nodejs
 
-COPY WebKit.git/ /webkit.git
 WORKDIR ${FUZZDIR}
-RUN git clone -q --depth=1 file:////webkit.git ./webkit
+RUN git clone --depth=1 https://github.com/mikhailramalho/WebKit.git ./webkit
+RUN git clone --depth=1 https://github.com/pmatos/js_fuzzer.git ./js_fuzzer
+RUN git clone --depth=1 https://github.com/mikhailramalho/jsc32-fuzz.git ./jsc32-fuzz
+RUN git clone https://github.com/mikhailramalho/fuzzinator.git ./fuzzinator
 
-ARG WEBKIT=${FUZZDIR}/webkit
-WORKDIR ${WEBKIT}
-RUN git remote set-url origin https://github.com/WebKit/WebKit.git
-RUN git fetch origin
-RUN git checkout -b main origin/main || true
-RUN git reset --hard origin/main
 
-WORKDIR ${FUZZDIR}
-RUN git clone -q --depth=1 https://github.com/pmatos/js_fuzzer.git ./js_fuzzer
-RUN git clone -q --depth=1 https://github.com/pmatos/jsc32-fuzz.git ./jsc32-fuzz
-RUN git clone -q --depth=1 https://github.com/renatahodovan/fuzzinator.git ./fuzzinator
-
-# Build GCC 10
-#############
-RUN apt-get install -y \
-    build-essential \
-    libc6-dev \
-    libgmp-dev \
-    libmpc-dev \
-    libmpfr-dev \
-    texinfo \
-    wget
 RUN if [ "${ARCH}" != "arm32v7" ]; then \
         apt-get install -y gcc-multilib g++-multilib; \
     fi
-RUN rm -rf /var/lib/apt/lists/*
-
-WORKDIR /tmp
-RUN wget https://mirrorservice.org/sites/sourceware.org/pub/gcc/releases/gcc-10.3.0/gcc-10.3.0.tar.gz
-RUN tar -xvzf gcc-10.3.0.tar.gz
-
-WORKDIR /tmp/gcc-build
-RUN if [ "${ARCH}" = "arm32v7" ]; then \
-        ../gcc-10.3.0/configure --prefix=/usr \
-                               --enable-languages=c,c++,lto \
-                               --program-suffix=-10 \
-                               --with-arch=armv7-a \
-                               --with-fpu=vfpv3-d16 \
-                               --with-float=hard \
-                               --with-mode=thumb \
-                               --disable-werror \
-                               --enable-checking=yes \
-                               --enable-shared \
-                               --enable-linker-build-id \
-                               --libexecdir=/usr/lib \
-                               --without-included-gettext \
-                               --enable-threads=posix \
-                               --libdir=/usr/lib \
-                               --enable-nls \
-                               --enable-bootstrap \
-                               --enable-clocale=gnu \
-                               --enable-libstdcxx-debug \
-                               --enable-libstdcxx-time=yes \
-                               --with-default-libstdcxx-abi=new \
-                               --enable-gnu-unique-object \
-                               --disable-libitm \
-                               --disable-libquadmath \
-                               --disable-libquadmath-support \
-                               --enable-plugin \
-                               --enable-default-pie \
-                               --enable-objc-gc=auto \
-                               --enable-multiarch \
-                               --disable-sjlj-exceptions \
-                               --build=arm-linux-gnueabihf \
-                               --host=arm-linux-gnueabihf \
-                               --target=arm-linux-gnueabihf; \
-    else \
-        ../gcc-10.3.0/configure --prefix=/usr \
-                               --enable-languages=c,c++,lto \
-                               --disable-werror \
-                               --enable-checking=yes \
-                               --program-suffix=-10 \
-                               --enable-bootstrap \
-                               --disable-multilib \
-                               --disable-docs \
-                               --disable-nls; \
-    fi
-RUN make -j${NCPUS} && make -j${NCPUS} install
-
-RUN update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-10 50
-RUN update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-10 50
 
 # /usr/lib for arm32 and /usr/lib64 for x86_64
 ENV LD_LIBRARY_PATH=/usr/lib:/usr/lib64
@@ -131,6 +56,7 @@ ENV LD_LIBRARY_PATH=/usr/lib:/usr/lib64
 # Setup environment
 ############
 ARG WEBTESTS=${FUZZDIR}/web_tests
+COPY web_tests.zip ${WEBTESTS}/
 WORKDIR ${WEBTESTS}
 RUN wget  https://github.com/pmatos/jsc32-fuzz/releases/download/webtests-20210824/web_tests.zip
 RUN unzip -qq web_tests.zip
