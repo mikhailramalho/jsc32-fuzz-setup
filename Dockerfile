@@ -39,11 +39,12 @@ RUN update-alternatives --install /usr/bin/python python /usr/bin/python3.7 1
 RUN curl -sL https://deb.nodesource.com/setup_14.x | bash - && apt-get install -y nodejs
 
 WORKDIR ${FUZZDIR}
-RUN git clone --depth=1 https://github.com/mikhailramalho/WebKit.git ./webkit
 RUN git clone --depth=1 https://github.com/pmatos/js_fuzzer.git ./js_fuzzer
-RUN git clone --depth=1 https://github.com/mikhailramalho/jsc32-fuzz.git ./jsc32-fuzz
+RUN git clone --depth=1 https://github.com/mikhailramalho/WebKit.git ./webkit
 RUN git clone https://github.com/mikhailramalho/fuzzinator.git ./fuzzinator
+RUN git clone --depth=1 https://github.com/mikhailramalho/jsc32-fuzz.git ./jsc32-fuzz
 
+ARG WEBKIT=${FUZZDIR}/webkit
 
 RUN if [ "${ARCH}" != "arm32v7" ]; then \
         apt-get install -y gcc-multilib g++-multilib; \
