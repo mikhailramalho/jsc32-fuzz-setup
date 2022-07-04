@@ -58,7 +58,7 @@ ENV LD_LIBRARY_PATH=/usr/lib:/usr/lib64
 ARG WEBTESTS=${FUZZDIR}/web_tests
 COPY web_tests.zip ${WEBTESTS}/
 WORKDIR ${WEBTESTS}
-RUN wget  https://github.com/pmatos/jsc32-fuzz/releases/download/webtests-20210824/web_tests.zip
+#RUN wget  https://github.com/pmatos/jsc32-fuzz/releases/download/webtests-20210824/web_tests.zip
 RUN unzip -qq web_tests.zip
 RUN rm web_tests.zip
 
