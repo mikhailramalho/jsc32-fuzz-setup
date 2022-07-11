@@ -39,14 +39,15 @@ RUN update-alternatives --install /usr/bin/python python /usr/bin/python3.7 1
 RUN curl -sL https://deb.nodesource.com/setup_14.x | bash - && apt-get install -y nodejs
 
 WORKDIR ${FUZZDIR}
-RUN git clone --depth=1 https://github.com/mikhailramalho/WebKit.git ./webkit
+ADD "https://www.random.org/cgi-bin/randbyte?nbytes=10&format=h" skipcache
+RUN git clone --depth=1 https://github.com/WebKit/WebKit.git ./webkit
 ARG WEBKIT=${FUZZDIR}/webkit
 
 # Setup environment
 ############
 ARG WEBTESTS=${FUZZDIR}/web_tests
 WORKDIR ${WEBTESTS}
-RUN wget wget https://github.com/mikhailramalho/jsc32-fuzz/releases/download/webtests-20220705/web_tests.zip
+RUN wget https://github.com/mikhailramalho/jsc32-fuzz/releases/download/webtests-20220711/web_tests.zip
 RUN unzip -qq web_tests.zip
 RUN rm web_tests.zip
 
