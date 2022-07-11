@@ -40,19 +40,19 @@ RUN curl -sL https://deb.nodesource.com/setup_14.x | bash - && apt-get install -
 
 WORKDIR ${FUZZDIR}
 ADD "https://www.random.org/cgi-bin/randbyte?nbytes=10&format=h" skipcache
-RUN git clone --depth=1 https://github.com/WebKit/WebKit.git ./webkit
+RUN git clone -q --depth=1 https://github.com/WebKit/WebKit.git ./webkit
 ARG WEBKIT=${FUZZDIR}/webkit
 
 # Setup environment
 ############
 ARG WEBTESTS=${FUZZDIR}/web_tests
 WORKDIR ${WEBTESTS}
-RUN wget https://github.com/mikhailramalho/jsc32-fuzz/releases/download/webtests-20220711/web_tests.zip
+RUN wget -q https://github.com/mikhailramalho/jsc32-fuzz/releases/download/webtests-20220711/web_tests.zip
 RUN unzip -qq web_tests.zip
 RUN rm web_tests.zip
 
 WORKDIR ${FUZZDIR}
-RUN git clone --depth=1 https://github.com/pmatos/js_fuzzer.git ./js_fuzzer
+RUN git clone -q --depth=1 https://github.com/pmatos/js_fuzzer.git ./js_fuzzer
 
 ARG JSFUZZER=${FUZZDIR}/js_fuzzer
 WORKDIR ${JSFUZZER}
@@ -62,9 +62,9 @@ RUN node build_db.js -i ${WEBTESTS} -o db chakra v8 spidermonkey WebKit/JSTests
 
 WORKDIR ${FUZZDIR}
 ADD "https://www.random.org/cgi-bin/randbyte?nbytes=10&format=h" skipcache
-RUN git clone https://github.com/mikhailramalho/jsc32-fuzz.git ./jsc32-fuzz
+RUN git clone -q https://github.com/pmatos/jsc32-fuzz.git ./jsc32-fuzz
 ADD "https://www.random.org/cgi-bin/randbyte?nbytes=10&format=h" skipcache
-RUN git clone https://github.com/mikhailramalho/fuzzinator.git ./fuzzinator
+RUN git clone -q https://github.com/mikhailramalho/fuzzinator.git ./fuzzinator
 
 ENV JSC32FUZZ=${FUZZDIR}/jsc32-fuzz
 ARG FUZZINATOR=${FUZZDIR}/fuzzinator
