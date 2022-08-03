@@ -1,5 +1,5 @@
 ARG ARCH=amd64
-FROM docker.io/${ARCH}/debian:buster
+FROM docker.io/${ARCH}/debian:bullseye
 ARG ARCH
 ARG NCPUS=1
 ARG GITLAB_URL
@@ -29,13 +29,13 @@ RUN apt-get update && apt-get install -y \
     python3-dev \
     python3-pip \
     python3-virtualenv \
+    python-is-python3 \
     ruby \
     rustc \
     software-properties-common \
     unzip \
     wget \
     zip
-RUN update-alternatives --install /usr/bin/python python /usr/bin/python3.7 1
 RUN curl -sL https://deb.nodesource.com/setup_14.x | bash - && apt-get install -y nodejs
 
 WORKDIR ${FUZZDIR}
@@ -47,7 +47,7 @@ ARG WEBKIT=${FUZZDIR}/webkit
 ############
 ARG WEBTESTS=${FUZZDIR}/web_tests
 WORKDIR ${WEBTESTS}
-RUN wget -q https://github.com/mikhailramalho/jsc32-fuzz/releases/download/webtests-20220711/web_tests.zip
+RUN wget -q https://github.com/mikhailramalho/jsc32-fuzz/releases/latest/download/web_tests.zip
 RUN unzip -qq web_tests.zip
 RUN rm web_tests.zip
 
@@ -69,7 +69,7 @@ RUN git clone -q https://github.com/mikhailramalho/fuzzinator.git ./fuzzinator
 ENV JSC32FUZZ=${FUZZDIR}/jsc32-fuzz
 ARG FUZZINATOR=${FUZZDIR}/fuzzinator
 WORKDIR ${FUZZDIR}
-RUN python -m virtualenv --python=python3.7 venv
+RUN python -m virtualenv --python=python3.9 venv
 RUN source venv/bin/activate && pip uninstall fuzzinator && pip install ${FUZZINATOR} picireny paramiko
 
 COPY setup-files.sh .
